@@ -1,0 +1,89 @@
+// .btn {
+//     cursor: pointer;
+//     color: $color-white;
+//     background-color: transparent;
+//     padding: 0 1.5rem;
+//     font-size: 1.4rem;
+//     line-height: 2.8rem;
+//     font-weight: 600;
+//     outline: none;
+
+//     &:active {
+//         outline: none;
+//     }
+
+//     &__plain {
+//         background-color: transparent!important;
+//         border: none;
+//     }
+
+//     &__outline {
+
+//         background-color: transparent!important;
+
+//         &--white {
+//             color: $color-white;
+//             border: 1px solid $color-white;
+//         }
+//     }
+// }
+
+// // Call-to-action buttons
+// .hero__cta-btn, .stages__cta-btn {
+//     cursor:pointer;
+//     font-size: 2rem;
+//     font-weight: 600;
+//     padding: 1.5rem 4rem;
+//     margin-bottom: 1rem;
+//     border-radius: .9rem;
+//     color: $color-white;
+//     border: none;
+//     background-color: $link-color1;
+//     -webkit-box-shadow: 0px 12px 25px -6px rgba(0, 0, 0, .9);
+//     -moz-box-shadow: 0px 12px 25px -6px rgba(0, 0, 0, .9);
+//     box-shadow: 0px 12px 25px -6px rgba(0, 0, 0, .9);
+//     // glowing animation
+//     -webkit-animation: glowing 1500ms infinite;
+//     -moz-animation: glowing 1500ms infinite;
+//     -o-animation: glowing 1500ms infinite;
+//     animation: glowing 1500ms infinite;
+
+//     &:focus {
+//         outline: none;
+//     }
+
+//     &:hover {
+//         // outline: none;
+//         transform: translateY(-0.3rem);
+//         -webkit-box-shadow: 0px 12px 25px -6px rgba(0, 0, 0, 0.9);
+//         -moz-box-shadow: 0px 12px 25px -6px rgba(0, 0, 0, 0.9);
+//         box-shadow: 0px 17px 30px -5px rgba(0, 0, 0, 0.9);
+//     }
+    
+//     &:active {
+//         outline: none;
+//         transform: translateY(-0.2rem);
+//         -webkit-box-shadow: 0px 10px 11px -4px rgba(0, 0, 0, 0.9);
+//         -moz-box-shadow: 0px 10px 11px -4px rgba(0, 0, 0, 0.9);
+//         box-shadow: 0px 10px 11px -4px rgba(0, 0, 0, 0.9);
+//     }
+// }
+
+button.btnShowHide {
+    cursor: pointer;
+    height: 4rem;
+    width: 4rem;
+    padding: .8rem;
+    border: none;
+    background-color: transparent;
+}
+
+button.btnShowHide:hover {
+    padding: .7rem;
+    border: 1px solid #e8e8e8;
+}
+
+button.btnShowHide:link,
+button.btnShowHide:focus {
+    outline: none;
+}

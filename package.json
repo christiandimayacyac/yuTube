@@ -1,0 +1,14 @@
+{
+  "name": "yutube",
+  "version": "1.0.0",
+  "description": "Youtube clone using PHP and MySQL",
+  "main": "index.js",
+  "scripts": {
+    "compile:sass": "node-sass ./sass/style.scss ./public/css/style.css -w"
+  },
+  "author": "Christian Dimayacyac",
+  "license": "ISC",
+  "devDependencies": {
+    "node-sass": "^4.11.0"
+  }
+}
