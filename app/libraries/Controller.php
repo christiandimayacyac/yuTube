@@ -17,9 +17,9 @@
         //Accept extra parameter as an array type for view usage
         public function loadView($view, $data = []) {
             //Check if the view exists
-            if ( file_exists('../app/views/pages/' . $view . '.php') ) {
+            if ( file_exists('../app/views/' . $view . '.php') ) {
                 //Require the view
-                require_once '../app/views/pages/' . $view . '.php';
+                require_once '../app/views/' . $view . '.php';
             }
             else {
                 //Halt the web app

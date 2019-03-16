@@ -23,4 +23,26 @@
         return $data;
     }
 
+    function isErrorFree($errors_array) {
+        foreach($errors_array as $error) {
+            if ( !empty($error)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function checkLength($str, $range) {
+        if ( strlen($str) >= $range["min"] && strlen($str) <= $range["max"] ) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkEmptyPOSTData($keys, $post_data) {
+        if ( empty($post_data[$keys]) ) {
+            
+        }
+    }
+
 ?>

@@ -1,5 +1,5 @@
 <?php
-class Videos {
+class Video {
     private $db;
     private $lastId;
 
@@ -7,9 +7,6 @@ class Videos {
         $this->db = new Database;
     }
 
-    public function index() {
-
-    }
 
     public function queryVideos() {
         return "Sample video";

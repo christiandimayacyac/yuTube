@@ -4,7 +4,7 @@
 
 ?>
 
-<div class="column">
+<div class="upload column">
     <?php 
         if ( !empty($data["fileErrors"]) ) {
             echo "<h1>" . $data["fileErrors"] [0]."</h1>";

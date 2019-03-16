@@ -4,7 +4,7 @@
 
         public function __construct() {
             //Load Models here
-            $this->videosModel = $this->loadModel('videos');
+            $this->videosModel = $this->loadModel('video');
         }
 
         public function index() {
@@ -14,7 +14,7 @@
                 'title' => 'YuTube'
             ];
 
-            $this->loadView('index', $data);
+            $this->loadView('pages/index', $data);
         }
         
 
@@ -28,7 +28,7 @@
                 'videos' => $videos
             ];
             
-            $this->loadView('index', $data);
+            $this->loadView('ipages/ndex', $data);
             
         }
 
@@ -41,7 +41,7 @@
                 'categories' => $categories
             ];
 
-            $this->loadView('upload', $data);
+            $this->loadView('pages/upload', $data);
         }
 
         public function about() {
@@ -49,7 +49,7 @@
                 'title' => 'About Me',
                 'developer' => 'Christian Dimayacyac'
             ];
-            $this->loadView('about', $data);
+            $this->loadView('pages/about', $data);
         }
 
         public function process() {
