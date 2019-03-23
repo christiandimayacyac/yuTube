@@ -2,6 +2,21 @@ html {
 	box-sizing: border-box;
 }
 
+footer {
+	display: flex;
+	font-size: 1.4rem;
+	justify-content: center;
+	align-items: center;
+	height: 3.6rem;
+	background-color: rgba(0,0,0,0.5);
+	margin-top: 1rem;
+
+	& p {
+		color: #fff;
+		margin: 0;
+	}
+}
+
 *,
 *:before,
 *:after { /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see https://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */

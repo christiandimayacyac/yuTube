@@ -1,3 +1,28 @@
+<?php
+    require_once "../app/classes/CurrentUser.php";
+
+    if ( isset($_SESSION["loggedInUser"]) && isset($_SESSION["uid"]) ) {
+        $userLoggedIn = (isset($_SESSION["loggedInUser"]) ? $_SESSION["loggedInUser"] : "");
+        $userLoggedInUID = (isset($_SESSION["uid"]) ? $_SESSION["uid"] : "");
+        $db = new Database();
+        $userObj = new CurrentUser($db, $userLoggedInUID);
+ 
+        if ( ($userObj->getDbErrorFlag()) && !empty($userObj->getDbErrorMessage()) ) {
+            redirectTo("user/logout");
+            exit();
+        }
+        
+        checkFingerprint();
+
+        //check if SESSION DATA are valid
+        if ( isset($_COOKIE["rememberMeCookie"]) ) {
+            if  ( !(isCookieValid($db)) ) {
+                redirectTo("users/logout");
+                exit();
+            }
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,10 +48,13 @@
         </div>
 
         <div class="menu-right">
-            <a href="<?php echo URLROOT; ?>/pages/upload" class="btn-right link-upload">
+            <?php if( isset($userObj) ) : ?>
+                <p class="welcome">Welcome <span class="username"><?php echo $userObj->getFirstName(); ?></span>!</p>
+            <?php endif; ?>
+            <a href="<?php echo URLROOT . '/pages/upload/' . $_SESSION['uid'] ; ?>" class="btn-right link-upload">
                 <img src="<?php echo URLROOT; ?>/images/icons/upload.png" alt="upload">
             </a>
-            <a href="<?php echo URLROOT; ?>/pages/upload" class="btn-right link-avatar">
+            <a href="<?php echo URLROOT; ?>/users/login" class="btn-right link-avatar">
                 <img src="<?php echo URLROOT; ?>/images/default.png" alt="avatar">
             </a>
         </div>

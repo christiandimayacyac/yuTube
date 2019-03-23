@@ -1,10 +1,14 @@
 <?php
     class Pages extends Controller{
-        private $videosModel;
+        private $videoModel;
+        private $userModel;
+        private $userObj;
 
         public function __construct() {
             //Load Models here
-            $this->videosModel = $this->loadModel('video');
+            $this->videoModel = $this->loadModel('video');
+            $this->userModel = $this->loadModel('user');
+
         }
 
         public function index() {
@@ -20,7 +24,7 @@
 
         public function search($term) {
             //query the videos based on term
-            $videos = $this->videosModel->queryVideos($term);
+            $videos = $this->videoModel->queryVideos($term);
 
             //pass the queried videos based on term
             $data = [
@@ -28,19 +32,29 @@
                 'videos' => $videos
             ];
             
-            $this->loadView('ipages/ndex', $data);
+            $this->loadView('pages/index', $data);
             
         }
 
-        public function upload() {
+        public function upload($encUID = 0) {
+            //Logout if no encrypted user id passed
+            if ($encUID === 0) {
+                redirectTo("users/logout");
+                exit();
+            } 
+
+            //Decode user encrypted user id
+            $id = getBase64DecodedValue(Constants::$session_key, $encUID);
+            $id = $encUID;
             //query all categories
-            $categories = $this->videosModel->queryCategories();
+            $categories = $this->videoModel->queryCategories();
+            $this->userObj = $this->userModel->getUserById($id);
 
             $data = [
                 'title' => 'YuTube',
-                'categories' => $categories
+                'categories' => $categories,
+                'encUID' => $encUID
             ];
-
             $this->loadView('pages/upload', $data);
         }
 
@@ -52,24 +66,23 @@
             $this->loadView('pages/about', $data);
         }
 
-        public function process() {
+        public function process($encUID) {
             //process POST data
             //declare errors array
             $flash_messages = array();
-
             if (isset($_POST['inputSubmit'])) {
                 //Include a class that will hold the video fila data temporarily 
                 //The instance will then be used for saving the file and file details in the target directory and database respectively
                 require_once APPROOT."/classes/VideoUploadData.php";
                 require_once APPROOT."/classes/VideoProcessData.php";
-
+                
                 $fileData = new VideoUploadData(
                                     $_FILES["inputFile"],
                                     $_POST["inputTitle"],
                                     $_POST["inputDescription"],
                                     $_POST["inputPrivacy"],
                                     $_POST["inputCategory"],
-                                    "IAN"
+                                    "ian"
                                 );
 
 
@@ -79,11 +92,11 @@
 
                 //Validate file
                 $fileErrors = $fileObj->validateVideoFile($tempFileFullPath);
-                
                 if ( !empty($fileErrors) ) {
                     //Flash error message and redirect back to upload page
                     flash("file_upload_status",  $fileErrors[0], "alert alert-danger");
-                    redirectTo('pages/upload');
+                    redirectTo('pages/upload/'. $this->encUID);
+                    exit();
                 }
                 else {  
                     //Proceed with uploading temporary file for conversion
@@ -101,11 +114,11 @@
                             //Format duration
                             $formatted_duration = $fileObj->formatDuration($duration);
 
-                            if ( $fileObj->saveVideoDetails($this->videosModel, $outputMp4FileFullPath, $formatted_duration) ) {
+                            if ( $fileObj->saveVideoDetails($this->videoModel, $outputMp4FileFullPath, $formatted_duration) ) {
                          
                                 //Generate thumbnails and save thumbnail details in the database
-                                $lastInsertedVideoId = $this->videosModel->getLastInsertId();
-                                if ( !($fileObj->generateThumbnails($this->videosModel, $outputMp4FileFullPath, $duration, $lastInsertedVideoId))) {
+                                $lastInsertedVideoId = $this->videoModel->getLastInsertId();
+                                if ( !($fileObj->generateThumbnails($this->videoModel, $outputMp4FileFullPath, $duration, $lastInsertedVideoId))) {
                                     array_push($flash_messages,"Warning: Incomplete operation: Unable to complete thumbnail generation operations");
                                 }
 
@@ -117,7 +130,7 @@
                                     array_push($flash_messages, "File has been uploaded successfully.");
                                     //store flash messages to sessions in the session_helper.php
                                     flash("file_upload_status", $flash_messages);
-                                    redirectTo('pages/upload');
+                                    redirectTo('pages/upload/' . $encUID);
                                     exit();
                                 }
                             }
@@ -136,12 +149,14 @@
 
                     //store flash messages to sessions in the session_helper.php
                     flash("file_upload_status", $flash_messages, "alert alert-danger");
-                    redirectTo('pages/upload');
+                    redirectTo('pages/upload/' . $encUID);
+                    exit();
                 }     
             }
             else {
                 //Redirect user to pages/upload if No POST data
-                redirectTo('pages/upload');
+                redirectTo('pages/upload/' . $encUID);
+                exit();
             }
         }
     }

@@ -17,15 +17,6 @@
     margin-top: 5.6rem;
 }
 
-#main-section-container {
-    margin-top: 5.6rem;
-}
-
-#main-content-container {
-    display: flex;
-    padding: 1rem 3rem;
-}
-
 .site-logo {
 
     &-link {
@@ -63,6 +54,20 @@
     border-bottom-right-radius: 5px;
     border: 1px solid #cccccc;
     padding: 0px 1.2rem;
+}
+
+.menu-right {
+    display: flex;
+    align-items: center;
+
+    & p {
+        display: inline-block;
+        margin: 0;
+    }
+
+    & .username {
+        font-weight: 700;
+    }
 }
 
 .btn-right {

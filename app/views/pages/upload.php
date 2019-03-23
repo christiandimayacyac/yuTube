@@ -6,14 +6,16 @@
 
 <div class="upload column">
     <?php 
+
         if ( !empty($data["fileErrors"]) ) {
             echo "<h1>" . $data["fileErrors"] [0]."</h1>";
         }
-
+        flash("file_upload_status");
         $uploadForm = new VideoDetailsFormProvider($data['categories']); 
-        echo $uploadForm->createUploadForm();
+        echo $uploadForm->createUploadForm($data['encUID']);
     ?>
 </div>
+
 
 <div class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">

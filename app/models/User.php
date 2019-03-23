@@ -13,8 +13,8 @@
             $this->db->bind(":firstName", $data['inputFirstName']);
             $this->db->bind(":lastName", $data['inputLastName']);
             //Encrypt the password before saving to the database
-            $hashed_password = password_hash($data['username'], PASSWORD_DEFAULT);
-            $this->db->bind(":password", $hashed_password);
+            // $hashed_password = password_hash($data['username'], PASSWORD_DEFAULT);
+            $this->db->bind(":password", $data['inputPassword']);
             $this->db->execute();
             
             //Check if inserting record successful
@@ -41,6 +41,20 @@
             else {
                 return false;
             }
+        }
+
+        public function getUserByUsername($username) {
+            $this->db->query("SELECT * FROM users WHERE username = :username");
+            $this->db->bind(":username", $username);
+            
+            return $this->db->getResultRow();
+        }
+
+        public function getUserById($id) {
+            $this->db->query("SELECT * FROM users WHERE userId = :id");
+            $this->db->bind(":id", $id);
+            
+            return $this->db->getResultRow();
         }
 
     }

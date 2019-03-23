@@ -16,15 +16,14 @@
             $url = $this->getUrl();
             //Check if file controller exists based on the URL from the controllers directory
             if ( file_exists('../app/controllers/' . ucwords($url[0]) . '.php') ) {
-                // var_dump($url);
                 //If controller exists, update the currentController   
                 $this->currentController = ucwords($url[0]);   
                 //unset $url[0] - Controller Name
                 unset($url[0]);
             }
-            // else {
-            //     die("Invalid Controller!");
-            // }
+            else {
+                die("Invalid Controller!");
+            }
 
             //Require the controller file
             require_once '../app/controllers/' . $this->currentController . '.php';
@@ -43,7 +42,7 @@
             }
 
             //Retrieve the remaining parameters/parts of the URL
-            $this->params = $url ? array_values($url) : [];
+            $this->params = $url ? array_values($url) : [];           
 
             //Call a callback method with parameters
             call_user_func_array([$this->currentController, $this->currentMethod], $this->params);

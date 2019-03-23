@@ -5,6 +5,7 @@
     */
 
     class Controller {
+
         //Load the Model Class specified on the parameter
         public function loadModel($model) {
             //Require the model

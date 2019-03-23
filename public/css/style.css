@@ -367,8 +367,15 @@ html {
 
 #page-container {
   background-color: #fafafa;
-  width: 100%;
-  height: 100%; }
+  width: 100%; }
+
+#main-section-container {
+  margin-top: 5.6rem; }
+
+#main-content-container {
+  display: flex;
+  padding: 1rem 3rem;
+  margin: 0 10%; }
 
 /*--------------------------------------------------------------
 # Base --- Utilities
@@ -452,6 +459,18 @@ big {
 --------------------------------------------------------------*/
 html {
   box-sizing: border-box; }
+
+footer {
+  display: flex;
+  font-size: 1.4rem;
+  justify-content: center;
+  align-items: center;
+  height: 3.6rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-top: 1rem; }
+  footer p {
+    color: #fff;
+    margin: 0; }
 
 *,
 *:before,
@@ -587,50 +606,6 @@ select {
 textarea {
   width: 100%; }
 
-.form {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: #ff0066;
-  padding: 3rem;
-  width: 70%;
-  margin-top: -32rem;
-  z-index: 100;
-  -webkit-box-shadow: 0px 16px 18px -6px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 16px 18px -6px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 16px 18px -6px rgba(0, 0, 0, 0.75); }
-  .form__title {
-    font-size: 2.4rem; }
-  .form__subtext {
-    font-size: 1.4rem;
-    font-weight: 600; }
-  .form__left, .form__right {
-    flex-basis: 50%;
-    text-align: left; }
-  .form__left {
-    align-self: flex-start; }
-  .form__right {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start; }
-  .form__group {
-    width: 100%;
-    margin: .5rem 0; }
-  .form__control {
-    font-size: 1.4rem;
-    padding: 1rem 1rem !important;
-    width: 100%; }
-  .form__submit {
-    font-size: 2rem !important;
-    margin: .5rem 0 0;
-    border: none;
-    background-color: #000 !important;
-    transition: all .2s; }
-    .form__submit:active, .form__submit:hover {
-      background-color: #6760fa !important; }
-
 .login.login-container,
 .signup.signup-container {
   display: flex;
@@ -644,7 +619,7 @@ textarea {
     display: flex;
     flex-direction: column;
     flex-grow: 0;
-    min-width: 45rem;
+    width: 40rem;
     max-height: 100%;
     padding: 3rem;
     background-color: #fff;
@@ -655,6 +630,10 @@ textarea {
       .signup.signup-container .column {
         min-width: 40rem;
         padding: 3rem 4rem; } }
+    @media only screen and (max-width: 400px) {
+      .login.login-container .column,
+      .signup.signup-container .column {
+        min-width: 35rem; } }
     .login.login-container .column img,
     .signup.signup-container .column img {
       width: 10rem;
@@ -666,6 +645,9 @@ textarea {
     .login.login-container .column p,
     .signup.signup-container .column p {
       font-size: 1.4rem; }
+    .login.login-container .column .alert,
+    .signup.signup-container .column .alert {
+      font-size: 1.3rem; }
     .login.login-container .column input[type="text"],
     .login.login-container .column input[type="password"],
     .login.login-container .column input[type="email"],
@@ -713,6 +695,15 @@ textarea {
       .signup.signup-container .column input[type="password"].form-control.is-invalid,
       .signup.signup-container .column input[type="email"].form-control.is-invalid {
         border-bottom: 1px solid #da0000 !important; }
+    .login.login-container .column .remember,
+    .signup.signup-container .column .remember {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center; }
+      .login.login-container .column .remember label,
+      .signup.signup-container .column .remember label {
+        margin: 0 0 0 .5rem;
+        font-size: 1.3rem; }
     .login.login-container .column span,
     .signup.signup-container .column span {
       display: block;
@@ -1042,6 +1033,19 @@ a {
   min-height: 30rem;
   border-radius: .3rem;
   box-shadow: rgba(0, 0, 0, 0.5) 0 0.01rem 0.02rem; }
+  .upload.column input[type="text"],
+  .upload.column input[type="textarea"],
+  .upload.column input[type="file"],
+  .upload.column select,
+  .upload.column textarea,
+  .upload.column button[type="submit"] {
+    font-size: 1.4rem;
+    padding: 1rem 1.5rem; }
+  .upload.column input[type="text"] {
+    height: 3.6rem; }
+  .upload.column select {
+    height: auto;
+    margin: .4rem 0; }
 
 /*--------------------------------------------------------------
 # Infinite scroll
@@ -1079,13 +1083,6 @@ a {
   bottom: 0;
   margin-top: 5.6rem; }
 
-#main-section-container {
-  margin-top: 5.6rem; }
-
-#main-content-container {
-  display: flex;
-  padding: 1rem 3rem; }
-
 .site-logo-link {
   width: 12rem;
   padding: .5rem; }
@@ -1115,6 +1112,15 @@ a {
   border-bottom-right-radius: 5px;
   border: 1px solid #cccccc;
   padding: 0px 1.2rem; }
+
+.menu-right {
+  display: flex;
+  align-items: center; }
+  .menu-right p {
+    display: inline-block;
+    margin: 0; }
+  .menu-right .username {
+    font-weight: 700; }
 
 .btn-right {
   cursor: pointer;

@@ -6,4 +6,23 @@
     min-height: 30rem;
     border-radius: .3rem;
     box-shadow: rgba(0,0,0,0.5) 0 .01rem .02rem;
+
+    input[type="text"],
+    input[type="textarea"],
+    input[type="file"],
+    select,
+    textarea,
+    button[type="submit"] {
+        font-size: 1.4rem;
+        padding: 1rem 1.5rem;
+    }
+
+    input[type="text"] {
+        height: 3.6rem;
+    }
+
+    select {
+        height: auto;
+        margin: .4rem 0;
+    }
 }

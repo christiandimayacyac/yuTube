@@ -15,5 +15,14 @@ html {
 #page-container {
     background-color: $page-bg-color;
     width: 100%;
-    height: 100%;
+}
+
+#main-section-container {
+    margin-top: 5.6rem;
+}
+
+#main-content-container {
+    display: flex;
+    padding: 1rem 3rem;
+    margin: 0 10%;
 }

@@ -6,9 +6,18 @@
         
         public static function formStringSanitizer($inputString) {
             $inputString = strip_tags($inputString);
-            $inputString = preg_replace('/\s/', '', $inputString);
+            $inputString = trim($inputString);
+            $inputString = preg_replace('/\s+/', ' ', $inputString);
             $inputString = strtolower($inputString);
-            $inputString = ucfirst($inputString);
+            $inputString = ucwords($inputString);
+
+            return $inputString;
+        }
+        
+        public static function formNameSanitizer($inputString) {
+            $inputString = FormSanitizer::formStringSanitizer($inputString);
+            $inputString = preg_replace('/\'+/', '\'', $inputString);
+            $inputString = preg_replace('/\-+/', '\-', $inputString);
 
             return $inputString;
         }

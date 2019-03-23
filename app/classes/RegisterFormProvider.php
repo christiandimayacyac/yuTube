@@ -15,7 +15,7 @@
             $inputPassword = $this->createInputPassword();
             $inputConfirmPassword = $this->createInputConfirmPassword();
             $inputSubmitButton = $this->createSubmitButton();
-
+            
             return "<form action='register' method='POST' enctype='multipart/form-data'>
                         $inputFirstName
                         $inputLastName
@@ -29,6 +29,7 @@
         }
         
         public function createInputFirstName() {
+            
             return "<div class='form-group'>
                         <input type='text' class='form-control form-control-lg " . (!empty($this->data['fname_err']) ? "is-invalid" : '') . "' id='inputFirstName' name='inputFirstName' placeholder='First Name' autocomplete='off' value='" . (isset($this->data['inputFirstName']) ? $this->data['inputFirstName'] : '') . "' required>" .
                         (!empty($this->data['fname_err']) ? "<span>{$this->data['fname_err']}</span>" : '') . 

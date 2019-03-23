@@ -22,6 +22,7 @@
                 </div>
                 <div class="login-form">
                     <?php 
+                        flash("flash_message");
                         $signInForm = new SignInFormProvider();
                         echo $signInForm->createSignInForm();
                     ?>

@@ -6,7 +6,7 @@
             $this->categories = $categories;
         }
         
-        public function createUploadForm() {
+        public function createUploadForm($encUID) {
             $fileInput = $this->createInputFile();
             $titleInput = $this->createInputTitle();
             $DescriptionInput = $this->createInputDescription();
@@ -14,7 +14,7 @@
             $selectPrivacy = $this->createSelectPrivacy();
             $selectCategory = $this->createSelectCategory();
 
-            return "<form action='process' method='POST' enctype='multipart/form-data'>
+            return "<form action='../process/" . $encUID ."' method='POST' enctype='multipart/form-data'>
                         $fileInput
                         $titleInput
                         $DescriptionInput
@@ -26,7 +26,6 @@
 
         private function createInputFile() {
             return "<div class='form-group'>
-                        <label for='inputFile'>Video File</label>
                         <input type='file' class='form-control-file' id='inputFile' name='inputFile'>
                     </div>";
         }
@@ -34,14 +33,14 @@
         private function createInputTitle() {
             return "<div class='form-group'>
                         <label for='inputFile'>Title</label>
-                        <input type='text' class='form-control-file' id='inputTitle' name='inputTitle'>
+                        <input type='text' class='form-control' id='inputTitle' name='inputTitle'>
                     </div>";
         }
 
         private function createInputDescription() {
             return "<div class='form-group'>
                         <label for='inputFile'>Description</label>
-                        <textarea class='form-control-file' id='inputDescription' rows='3' name='inputDescription'></textarea>
+                        <textarea class='form-control' id='inputDescription' rows='3' name='inputDescription'></textarea>
                     </div>";
         }
 
@@ -58,12 +57,14 @@
             //reiterate each of the categories
             $html = "<div class='form-group'><select class='custom-select' id='inputCategory' name='inputCategory'>";
             foreach($this->categories as $category) {
-                $html .= "<option value=$category->cat_id selected>$category->cat_name</option>"; 
+                $html .= "<option value=$category->cat_id>$category->cat_name</option>"; 
             }
             $html .= "</select></div>";
                     
             return $html;   
         }
+
+        
         
         private function createSubmitButton() {
             return "<button type='submit' class='btn btn-primary' name='inputSubmit' id='inputSubmit'>Upload</button>";

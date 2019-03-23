@@ -1,7 +1,6 @@
 <?php 
     require_once APPROOT . '/classes/RegisterFormProvider.php';
     require_once APPROOT . '/classes/FormSanitizer.php';
-    require_once APPROOT . '/classes/Constants.php';
     require_once APPROOT . '/classes/Account.php';
 ?>
 <!DOCTYPE html>
