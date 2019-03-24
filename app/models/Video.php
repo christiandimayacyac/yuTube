@@ -33,8 +33,6 @@ class Video {
                                         filePath, 
                                         category, 
                                         duration
-                                        -- dateUploaded, 
-                                        -- views, 
                                         )
                             VALUES(
                                 :uploadedBy, 
@@ -44,19 +42,15 @@ class Video {
                                 :filePath, 
                                 :category,
                                 :duration
-                                -- :dateUploaded, 
-                                -- :views, 
                             )
                          ");
-        $this->db->bind(":uploadedBy", "Christian");
+        $this->db->bind(":uploadedBy", $videoDetails->getvideoUploaderId());
         $this->db->bind(":title", $videoDetails->getVideoTitle());
         $this->db->bind(":description", $videoDetails->getVideoDescription());
         $this->db->bind(":privacy", $videoDetails->getVideoPrivacyType());
         $this->db->bind(":filePath", $outputMp4FileFullPath);
         $this->db->bind(":category", $videoDetails->getVideoCategory());
         $this->db->bind(":duration", $duration);
-        // $this->db->bind(":dateUploaded", "Christian");
-        // $this->db->bind(":views", "Christian");
         
         $this->db->execute();
 

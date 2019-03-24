@@ -7,18 +7,18 @@
         private $videoDescription;
         private $videoPrivacyType;
         private $videoCategory;
-        private $videoUploader;
+        private $videoUploaderId;
 
         private $fileExtension;
         private $duration;
 
-        public function __construct($videoFile, $videoTitle, $videoDescription, $videoPrivacyType, $videoCategory, $videoUploader) {
+        public function __construct($videoFile, $videoTitle, $videoDescription, $videoPrivacyType, $videoCategory, $videoUploaderId) {
             $this->videoFile = $videoFile;
             $this->videoTitle = $videoTitle;
             $this->videoDescription = $videoDescription;
             $this->videoPrivacyType = $videoPrivacyType;
             $this->videoCategory = $videoCategory;
-            $this->videoUploader = $videoUploader;
+            $this->videoUploaderId = $videoUploaderId;
             $this->fileExtension = $this->getFileExtension();
         }
 
@@ -42,8 +42,8 @@
             return $this->videoCategory;
         }
         
-        public function getvideoUploader() {
-            return $this->videoUploader;
+        public function getvideoUploaderId() {
+            return $this->videoUploaderId;
         }
 
         public function getFileExtension() {

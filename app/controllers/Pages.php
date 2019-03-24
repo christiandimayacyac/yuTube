@@ -2,7 +2,6 @@
     class Pages extends Controller{
         private $videoModel;
         private $userModel;
-        private $userObj;
 
         public function __construct() {
             //Load Models here
@@ -37,18 +36,14 @@
         }
 
         public function upload($encUID = 0) {
-            //Logout if no encrypted user id passed
+            //Logout if no encrypted user id passed in the URL
             if ($encUID === 0) {
                 redirectTo("users/logout");
                 exit();
             } 
 
-            //Decode user encrypted user id
-            $id = getBase64DecodedValue(Constants::$session_key, $encUID);
-            $id = $encUID;
             //query all categories
             $categories = $this->videoModel->queryCategories();
-            $this->userObj = $this->userModel->getUserById($id);
 
             $data = [
                 'title' => 'YuTube',
@@ -75,17 +70,21 @@
                 //The instance will then be used for saving the file and file details in the target directory and database respectively
                 require_once APPROOT."/classes/VideoUploadData.php";
                 require_once APPROOT."/classes/VideoProcessData.php";
+
+                //Decode user encrypted user id
+                $id = (int)getBase64DecodedValue(Constants::$session_key, $encUID);
                 
+                //Encapsulate all POST DATA containing the video file details
                 $fileData = new VideoUploadData(
                                     $_FILES["inputFile"],
                                     $_POST["inputTitle"],
                                     $_POST["inputDescription"],
                                     $_POST["inputPrivacy"],
                                     $_POST["inputCategory"],
-                                    "ian"
+                                    $id
                                 );
-
-
+                //Create an instance of VideoProcessData that will hold the file and details  
+                //with corresponding methods in processing the file and details                                
                 $fileObj = new VideoProcessData($fileData);     
                 //Create fileFullPath for the temporary file
                 $tempFileFullPath = $fileObj->createFilePath(); 

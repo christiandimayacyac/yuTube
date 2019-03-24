@@ -14,7 +14,7 @@
         
         checkFingerprint();
 
-        //check if SESSION DATA are valid
+        //check if _COOKIE DATA are valid
         if ( isset($_COOKIE["rememberMeCookie"]) ) {
             if  ( !(isCookieValid($db)) ) {
                 redirectTo("users/logout");
