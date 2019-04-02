@@ -2,13 +2,17 @@
     class Pages extends Controller{
         private $videoModel;
         private $userModel;
+        private $test;
 
         public function __construct() {
             //Load Models here
             $this->videoModel = $this->loadModel('video');
             $this->userModel = $this->loadModel('user');
+            $this->test = "may laman";
 
+            require_once "../app/classes/UserData.php";
         }
+        
 
         public function index() {
             //TODO: load random videos at initial state
@@ -69,7 +73,7 @@
                 //Include a class that will hold the video fila data temporarily 
                 //The instance will then be used for saving the file and file details in the target directory and database respectively
                 require_once APPROOT."/classes/VideoUploadData.php";
-                require_once APPROOT."/classes/VideoProcessData.php";
+                require_once APPROOT."/classes/VideoDataService.php";
 
                 //Decode user encrypted user id
                 $id = (int)getBase64DecodedValue(Constants::$session_key, $encUID);
@@ -83,9 +87,9 @@
                                     $_POST["inputCategory"],
                                     $id
                                 );
-                //Create an instance of VideoProcessData that will hold the file and details  
+                //Create an instance of VideoDataService that will hold the file and details  
                 //with corresponding methods in processing the file and details                                
-                $fileObj = new VideoProcessData($fileData);     
+                $fileObj = new VideoDataService($fileData);     
                 //Create fileFullPath for the temporary file
                 $tempFileFullPath = $fileObj->createFilePath(); 
 
@@ -158,5 +162,89 @@
                 exit();
             }
         }
+
+        public function watch($encUID, $videoId=0) {
+            if ($videoId === 0) {
+                redirectTo("users/login");
+                exit();
+            } 
+            //Require the Videp Class for CurrentVideo container
+            require_once "../app/classes/CurrentVideo.php";
+
+            //Instantiate User to get the Uploader details
+            $currentVideo = new CurrentVideo($this->videoModel, $videoId);
+            $currentVideoUploader = new User();
+            //TODO: Decrypt encUID
+
+            $data = [
+                'title' => 'Player',
+                'videoId' => $videoId,
+                'currentVideo' => $currentVideo,
+                'currentVideoUploader' => $currentVideoUploader->getUserById($currentVideo->getVideoUploaderId()),
+                // 'loggedInUserId' => 36 //TODO: SET TO AN ENCRYPTED USER ID
+                'loggedInUserId' => $encUID //TODO: SET TO AN ENCRYPTED USER ID
+            ];
+
+            $this->loadView("pages/watch", $data);
+        }
+
+        //Ajax Methods
+        public function ajaxToggleSubscribe() {
+            // $names = array("name"=>"ian", "gender"=>"male", "age"=>"38");
+            $videoId = $_POST["videoId"];
+            $btnClicked = $_POST["btnClicked"];
+            $encUserId= $_POST["encUserId"];
+            echo json_encode($encUserId);
+        }
+
+        public function ajaxLikeVideo() {
+            $videoId =(int)$_POST["videoId"];
+            $encUID = $_POST["encUID"];
+            $userId = getBase64DecodedValue(Constants::$session_key,$encUID);
+            $flag = "";
+
+            //check if video is liked by the current user
+            if ( $this->videoModel->videoLiked($videoId, $userId) ) {
+                //Unlike the video
+                $this->videoModel->decrementLikes($videoId, $userId);
+            }
+            else {
+                //Like the video and Decrement dislike if user already disliked the video
+                $this->videoModel->incrementLikes($videoId, $userId);
+                $this->videoModel->decrementDislikes($videoId, $userId);
+                $flag = "like";
+            }
+
+            $updatedNumOfLikes = $this->videoModel->getVideoLikes($videoId);
+            $updatedNumOfDisLikes = $this->videoModel->getVideoDislikes($videoId);
+            $likeDislikeStat = array("likes"=>$updatedNumOfLikes, "dislikes"=>$updatedNumOfDisLikes, "flag"=>$flag);
+            echo (json_encode($likeDislikeStat));
+        }
+
+        public function ajaxDislikeVideo() {
+            $videoId = (int)$_POST["videoId"];
+            $encUID = $_POST["encUID"];
+            $userId = getBase64DecodedValue(Constants::$session_key,$encUID);
+            $flag = "";
+
+            //check if video is disliked by the current user
+            if ( $this->videoModel->videoDisliked($videoId, $userId) ) {
+                //Undislike the video
+                $this->videoModel->decrementDislikes($videoId, $userId);
+            }
+            else {
+                //Like the video and Decrement dislike if user already disliked the video
+                $this->videoModel->incrementDislikes($videoId, $userId);
+                $this->videoModel->decrementLikes($videoId, $userId);
+                $flag = "dislike";
+            }
+
+            $updatedNumOfLikes = $this->videoModel->getVideoLikes($videoId);
+            $updatedNumOfDisLikes = $this->videoModel->getVideoDislikes($videoId);
+            $likeDislikeStat = array("likes"=>$updatedNumOfLikes, "dislikes"=>$updatedNumOfDisLikes, "flag"=>$flag);
+            echo (json_encode($likeDislikeStat));
+        }
+
+
     }
 ?>

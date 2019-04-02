@@ -89,63 +89,6 @@
         return ( preg_match("/^[a-zA-Z0-9\_]*$/", $username) ) ? true : false;
     }
 
-    function isCookieValid($db) {
-        //Decode the cookie
-        $idFromCookie= getBase64DecodedValue(Constants::$cookie_key, $_COOKIE["rememberMeCookie"]);
-        //Find id in the Users table; Return true if found, otherwise return false
-        $db->query("SELECT userId FROM users WHERE userId = :id");
-        $db->bind(":id", $idFromCookie);
-        
-        if  ( $rs = $db->getResultRow() ) {
-            return $rs;
-        }
-        else {
-            return false;
-        }
-        // return (Constants::$cookie_key . "-" . $_COOKIE["rememberMeCookie"] . " - " . "CookieId: " . $cookieId);
-    }
-
-    function setFingerprint(){
-		$_SESSION['fingerprint'] = getBase64EncodedValue($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
-        $_SESSION['last_active'] = time();
-
-	}
-
-    function checkFingerprint(){
-		$time_limit = 60 * Constants::$timeLimit; //Idle time limit in minutes
-		$isValidFingerprint = true;
-		
-		// $fingerprint = $_SESSION['fingerprint'];
-		$current_fingerprint = getBase64EncodedValue($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
-		
-		
-		
-		
-		if ( isset($_SESSION['fingerprint']) && ($current_fingerprint !=  $_SESSION['fingerprint'])){
-            $isValidFingerprint = false;
-            redirectTo("users/logout");
-            exit();
-		}
-		elseif ( isset($_SESSION['fingerprint']) && isset($_SESSION['last_active']) ) {
-			$session_time = time() - $_SESSION['last_active'];
-			if ( $session_time > $time_limit ){
-                $isValidFingerprint = false;
-				redirectTo("users/logout");
-                exit();
-			}
-			else{
-				$_SESSION['last_active'] = time();
-				// $isValidFingerprint = true;
-			}
-		}
-		else{
-			
-			$isValidFingerprint = false;
-			// signOut();
-		}
-	
-		return $isValidFingerprint;
-	}
 
 ?>
 

@@ -14,7 +14,7 @@
         public function login() {
 
             //Check for cookie, validate and login if exists
-            $this->autoLogin();
+            autoLogin($this->userModel);
 
             //Initialize Error Data Array- Reset Value
             $keys = ['uname_err', 'password_err'];
@@ -25,10 +25,10 @@
 
             if ( isset($_POST['inputSubmit']) && ($_SERVER['REQUEST_METHOD'] == 'POST') ) {
                 //Require_once Constants and FormSanitizer for POST DATA processing
-                require_once '../app/classes/Account.php';
+                require_once '../app/classes/AccountService.php';
                 require_once '../app/classes/FormSanitizer.php';
 
-                $account = new Account($this->userModel);
+                $account = new AccountService($this->userModel);
 
                 //Batch Sanitize POST Data
                 // $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -55,7 +55,7 @@
                             //verify password
                             if ( password_verify($post_data["inputLoginPassword"], $user->password) ) {
                                 //Create User Sessions
-                                $this->createUserSessions($user);
+                                createUserSessions($user);
 
                                 //Set Fingerprint
                                 setFingerprint();
@@ -126,12 +126,12 @@
 
             if ( isset($_POST['inputSubmit']) && ($_SERVER['REQUEST_METHOD'] == 'POST') ) {
                 
-                //Require_once Account and FormSanitizer for POST DATA processing
-                require_once '../app/classes/Account.php';
+                //Require_once AccountService and FormSanitizer for POST DATA processing
+                require_once '../app/classes/AccountService.php';
                 require_once '../app/classes/FormSanitizer.php';
                 
-                //Instantiate Account that will validate the POST DATA
-                $account = new Account($this->userModel);
+                //Instantiate AccountService that will validate the POST DATA
+                $account = new AccountService($this->userModel);
 
                 //Batch Sanitize POST Data
                 // $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -202,37 +202,6 @@
 
             redirectTo("users/login");
             exit();
-        }
-
-        private function autoLogin() {
-            //Create Database instance for isCookieValid function
-            $db = new Database();
-            //Check if yutube cookie is present
-            if ( isset($_COOKIE["rememberMeCookie"]) ) {
-                if  ( !($rs = isCookieValid($db)) ) {
-                    redirectTo("users/logout");
-                    exit();
-                }
-                else {
-                    //Automatic Login for the user
-                    $user = $this->userModel->getUserById($rs->userId);
-                    $this->createUserSessions($user);
-
-                    //Redirect to Upload page
-                    redirectTo("pages/upload/$_SESSION[uid]"); 
-                    exit();
-                }
-            }
-        }
-
-        private function createUserSessions($user) {
-            //Create User Sessions
-            $_SESSION['uid'] = getBase64EncodedValue(Constants::$session_key, $user->userId);
-            $_SESSION['loggedInUser'] = $user->username;
-
-            //Set Fingerprint
-            setFingerprint();
-
         }
 
     }

@@ -42,7 +42,7 @@
             return $this->videoCategory;
         }
         
-        public function getvideoUploaderId() {
+        public function getVideoUploaderId() {
             return $this->videoUploaderId;
         }
 
@@ -52,9 +52,9 @@
             return end($filename_array);
         }
 
-        public function setDuration($duration) {
-            $this->duration = $duration;
-        }
+        // public function setDuration($duration) {
+        //     $this->duration = $duration;
+        // }
     }
 
 ?>

@@ -63,6 +63,7 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 /*--------------------------------------------------------------
 # Layout
 --------------------------------------------------------------*/
+@import "layout/base-layout";
 @import "layout/search-bar";
 
 /*--------------------------------------------------------------
@@ -126,4 +127,6 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 @import "components/menubar";
 @import "components/buttons";
 @import "components/modal";
+@import "components/player";
+@import "components/video-info";
 

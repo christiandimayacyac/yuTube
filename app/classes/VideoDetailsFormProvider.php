@@ -32,14 +32,14 @@
 
         private function createInputTitle() {
             return "<div class='form-group'>
-                        <label for='inputFile'>Title</label>
+                        <label for='inputTitle'>Title</label>
                         <input type='text' class='form-control' id='inputTitle' name='inputTitle'>
                     </div>";
         }
 
         private function createInputDescription() {
             return "<div class='form-group'>
-                        <label for='inputFile'>Description</label>
+                        <label for='inputDescription'>Description</label>
                         <textarea class='form-control' id='inputDescription' rows='3' name='inputDescription'></textarea>
                     </div>";
         }

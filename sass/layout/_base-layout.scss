@@ -1,0 +1,36 @@
+#page-container {
+    flex: 1 0;
+    background-color: $page-bg-color;
+    width: 100%;
+}
+
+#main-section-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5.6rem;
+}
+
+#main-content-container {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem 3rem;
+    margin: 0;
+    flex: 1;
+}
+
+.column-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem;
+}
+
+
+.column-right {
+    display: flex;
+    max-width: 42rem;
+    height: 100%;
+    flex-grow: 1;
+    padding: 1rem;
+}
+

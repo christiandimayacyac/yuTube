@@ -7,7 +7,7 @@
         }
 
         public function register($data) {
-            $this->db->query("INSERT INTO users (username, email, firstName, lastName, password) VALUES (:username, :email, :firstName, :lastName, :password)");
+            $this->db->query("INSERT INTO users (username, email, firstName, lastName, password, profilePicPath) VALUES (:username, :email, :firstName, :lastName, :password, :profilePicPath)");
             $this->db->bind(":username", $data['inputUserName']);
             $this->db->bind(":email", $data['inputEmail']);
             $this->db->bind(":firstName", $data['inputFirstName']);
@@ -15,6 +15,7 @@
             //Encrypt the password before saving to the database
             // $hashed_password = password_hash($data['username'], PASSWORD_DEFAULT);
             $this->db->bind(":password", $data['inputPassword']);
+            $this->db->bind(":profilePicPath", $data['profilePicPath']);
             $this->db->execute();
             
             //Check if inserting record successful

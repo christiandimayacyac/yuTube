@@ -1,7 +1,6 @@
 <?php 
     require APPROOT . '/views/inc/header.php';
     require APPROOT . '/classes/VideoDetailsFormProvider.php';
-
 ?>
 
 <div class="upload column">

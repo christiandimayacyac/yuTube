@@ -25,7 +25,7 @@
         public static $cookie_key = "r3m3mb3rM3";
 
         //Cookie time limit for remember me in minutes
-        public static $timeLimit = 30;
+        public static $timeLimit = 2;
 
     }
 

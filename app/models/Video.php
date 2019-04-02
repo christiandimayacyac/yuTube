@@ -78,6 +78,135 @@ class Video {
             return false;
         }
     }
+
+    public function getVideoById($videoId) {
+        $this->db->query("SELECT * FROM videos WHERE id = :videoId");
+        $this->db->bind(":videoId", $videoId);
+        
+        return $this->db->getResultRow();
+    }
+
+    public function incrementViews($videoId) {
+        $this->db->query("UPDATE videos SET views=views+1 WHERE id = :videoId");
+        $this->db->bind(":videoId", $videoId);
+        $this->execute();
+
+        return $this->getRowCount();
+
+        //TODO: update video object model once number of views gets incremented
+    }
+
+    public function incrementLikes($videoId, $userId) {
+        //Insert Like record into the likes table
+        $this->db->query("INSERT INTO likes(videoId, userId) VALUES(:videoId, :userId)");
+        $this->db->bind(":videoId", $videoId);
+        $this->db->bind(":userId", $userId);
+        $this->db->execute();
+
+        // Update the total likes of the video being liked in the videos table
+        if ( $this->db->getRowCount() > 0 ) {
+            $this->db->query("UPDATE videos SET likes=likes+1 WHERE id = :videoId");
+            $this->db->bind(":videoId", $videoId);
+            $this->db->execute();
+        } 
+
+        return $this->db->getRowCount();
+
+        //TODO: update video object model once number of likes gets incremented
+    }
+
+    public function decrementLikes($videoId, $userId) {
+        //Remove Like record from the likes table
+        $this->db->query("DELETE FROM likes WHERE videoId = :videoId AND userId = :userId");
+        $this->db->bind(":videoId", $videoId);
+        $this->db->bind(":userId", $userId);
+        $this->db->execute();
+
+        //Update the total likes of the video being unliked in the videos table
+        if ( $this->db->getRowCount() > 0 ) {
+            $this->db->query("UPDATE videos SET likes=likes-1 WHERE id = :videoId");
+            $this->db->bind(":videoId", $videoId);
+            $this->db->execute();
+        }
+
+        return $this->db->getRowCount();
+
+        //TODO: update video object model once number of likes gets decremented
+    }
+    
+    public function incrementDislikes($videoId, $userId) {
+        //Insert Dislike record into the likes table
+        $this->db->query("INSERT INTO dislikes(videoId, userId) VALUES(:videoId, :userId)");
+        $this->db->bind(":videoId", $videoId);
+        $this->db->bind(":userId", $userId);
+        $this->db->execute();
+
+        //Update the total dislikes of the video being liked in the videos table
+        if ( $this->db->getRowCount() > 0 ) {
+            $this->db->query("UPDATE videos SET dislikes=dislikes+1 WHERE id = :videoId");
+            $this->db->bind(":videoId", $videoId);
+            $this->db->execute();
+        }
+
+        return $this->db->getRowCount();
+
+        //TODO: update video object model once number of likes gets incremented
+    }
+    
+    public function decrementDislikes($videoId, $userId) {
+        //Remove Dislike record from the dislikes table
+        $this->db->query("DELETE FROM dislikes WHERE videoId = :videoId AND userId = :userId");
+        $this->db->bind(":videoId", $videoId);
+        $this->db->bind(":userId", $userId);
+        $this->db->execute();
+        
+        //Update the total dislikes of the video being disliked in the videos table
+        if ( $this->db->getRowCount() > 0 ) {
+            $this->db->query("UPDATE videos SET dislikes=dislikes-1 WHERE id = :videoId");
+            $this->db->bind(":videoId", $videoId);
+            $this->db->execute();
+        }
+
+        return $this->db->getRowCount();
+
+        //TODO: update video object model once number of dislikes gets incremented
+    }
+
+    public function videoLiked($videoId, $userId) {
+        $this->db->query("SELECT id FROM likes WHERE videoId = :videoId AND userId = :userId");
+        $this->db->bind(":videoId", $videoId);
+        $this->db->bind(":userId", $userId);
+        $this->db->execute();
+
+        return $this->db->getResultRow();
+    }
+
+    public function videoDisliked($videoId, $userId) {
+        $this->db->query("SELECT id FROM dislikes WHERE videoId = :videoId AND userId = :userId");
+        $this->db->bind(":videoId", $videoId);
+        $this->db->bind(":userId", $userId);
+        $this->db->execute();
+
+        return $this->db->getResultRow();
+    }
+
+    public function getVideoLikes($videoId) {
+        $this->db->query("SELECT likes FROM videos WHERE id = :videoId");
+        $this->db->bind(":videoId", $videoId);
+        $numOfLikes = $this->db->getResultRow(); 
+
+        return $numOfLikes->likes;
+    }
+
+    public function getVideoDislikes($videoId) {
+        $this->db->query("SELECT dislikes FROM videos WHERE id = :videoId");
+        $this->db->bind(":videoId", $videoId);
+        $numOfDislikes = $this->db->getResultRow(); 
+        
+        return $numOfDislikes->dislikes;
+    }
+
+
     
     
 }

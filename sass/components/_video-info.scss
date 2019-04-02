@@ -1,0 +1,91 @@
+
+
+.video-header {
+
+    & .video-primary-info {
+        margin-bottom: 1rem;
+
+        & .video-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        & .video-stats {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            color: #6d6d6d;
+            font-size: 1.5rem;
+
+            & .video-views {
+                font-size: 1.6rem;
+            }
+    
+            & .thumbs {
+                font-size: 1.6rem;
+                display: flex;
+                align-items: center;
+
+                &-icon {
+                    cursor: pointer;
+                    height: 2.8rem;
+                    border: none;
+                    background-color: transparent;
+
+                    &:focus {
+                        outline: transparent;
+                    }
+        
+                    &:last-child {
+                        margin-left: 1rem;
+                    }
+
+                    & img {
+                        height: 100%;
+                    }
+                }
+            }
+            
+        }
+
+    }
+
+    & .video-secondary-info {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+
+        & .video-secondary-avatar {
+            height: 4.6rem;
+            margin-right: 1.2rem;
+            
+            & img {
+                height: 100%;
+                border-radius: 50%;
+            }
+        }
+
+        & .video-uploader {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        & .video-published {
+            color: #6d6d6d;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        & button.video-subscibe-button {
+            color: #6d6d6d;
+            font-size: 1.4rem;
+            height: 4rem;
+            margin-left: auto;
+        }
+    }
+
+    
+}

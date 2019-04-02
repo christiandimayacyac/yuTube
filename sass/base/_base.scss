@@ -5,6 +5,8 @@
 }
 body,
 html {
+    display: flex;
+    flex-direction: column;
     //current styling for base font
     font-family: 'Lato', Courier, monospace;
     font-size: 62.5%; //1rem = 10px; 10/16 = 62.5%
@@ -12,17 +14,3 @@ html {
     height: 100%;
 }
 
-#page-container {
-    background-color: $page-bg-color;
-    width: 100%;
-}
-
-#main-section-container {
-    margin-top: 5.6rem;
-}
-
-#main-content-container {
-    display: flex;
-    padding: 1rem 3rem;
-    margin: 0 10%;
-}
