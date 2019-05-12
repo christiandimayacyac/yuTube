@@ -32,7 +32,7 @@
             <a href="<?php echo URLROOT . '/pages/upload/' . (isset($_SESSION['uid'])?$_SESSION['uid']:'') ; ?>" class="btn-right link-upload">
                 <img src="<?php echo URLROOT; ?>/images/icons/upload.png" alt="upload">
             </a>
-            <a href="<?php echo URLROOT.'/pages/watch/'.(isset($_SESSION['uid'])?$_SESSION['uid']:'').'/107'; ?>" class="btn-right link-avatar">
+            <a href="<?php echo URLROOT.'/pages/watch/'.(isset($_SESSION['uid'])?$_SESSION['uid']:'').'/112'; ?>" class="btn-right link-avatar">
                 <img src="<?php echo URLROOT; ?>/uploads/profilepics/default.png" alt="avatar">
             </a>
         </div>

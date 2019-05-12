@@ -1,6 +1,5 @@
 <?php
-    session_start();
-    $myname ="ian";
+    session_start();                      
 
     //Function to reset sessions for flash messages
     function reset_flashmsg_sessions($name, $messages, $class) {  
@@ -52,15 +51,25 @@
 
 	}
 
-    function checkFingerprint(){
+    function checkFingerprint($encUID = 0){
+        // die("checking fingerprint");
+        //Check if encUID is equal to the stored session containing the encrypted user ID
+        if ( !matchEncUIDSessionID($encUID) ) {
+            // redirectTo("pages/pagenotfound");
+            // exit();
+            // die("halt1");
+            return false;
+        }
+        // else {
+            // die("halttwo". matchEncUIDSessionID($encUID));
+            // exit();
+        // }
+
 		$time_limit = 60 * Constants::$timeLimit; //Idle time limit in minutes
 		$isValidFingerprint = true;
 		
 		// $fingerprint = $_SESSION['fingerprint'];
 		$current_fingerprint = getBase64EncodedValue($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
-		
-		
-		
 		
 		if ( isset($_SESSION['fingerprint']) && ($current_fingerprint !=  $_SESSION['fingerprint'])){
             $isValidFingerprint = false;
@@ -104,7 +113,7 @@
             }
     
             //Checks user's client machine fingerprint and idle time
-            checkFingerprint();
+            checkFingerprint($userLoggedInUID);
         }
         
         autologin();
@@ -112,9 +121,11 @@
     }
 
     function autologin($userModel) {
+        // die($_COOKIE["rememberMeCookie"]);
         if ( isset($_COOKIE["rememberMeCookie"]) ) {  
             $db = new Database(); //check if a stored _COOKIE DATA is valid
             if  ( !($rs = isCookieValid($db)) ) {
+                die("cookie not valid");
                 redirectTo("users/logout");
                 exit();
             }
@@ -157,6 +168,25 @@
         else {
             return false;
         }
+    }
+
+    function isUserLoggedIn($encUID=0) {
+        if ( isset($_SESSION['uid']) && isset($_SESSION['loggedInUser']) ) {
+            return ($encUID === $_SESSION['uid']) ? true : false;
+        }
+
+        return false;
+    }
+
+    function matchEncUIDSessionID($encUID) {
+        if ( $encUID !== 'guest' && isset($_SESSION['uid']) ) {
+            if ( $encUID == $_SESSION['uid'] ) {
+                // die("true");
+                return true;
+            }
+        }
+        // die("false");
+        return false;
     }
 
 ?>

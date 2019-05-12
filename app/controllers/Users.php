@@ -186,6 +186,7 @@
         }
 
         public function logout() {
+            // die("loggedout");
             // remove all session variables
             session_unset($_SESSION['uid']);
             session_unset($_SESSION['username']);
@@ -201,6 +202,7 @@
             session_regenerate_id(true);
 
             redirectTo("users/login");
+            // redirectTo("pages/watch");
             exit();
         }
 

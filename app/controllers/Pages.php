@@ -8,7 +8,6 @@
             //Load Models here
             $this->videoModel = $this->loadModel('video');
             $this->userModel = $this->loadModel('user');
-            $this->test = "may laman";
 
             require_once "../app/classes/UserData.php";
         }
@@ -45,6 +44,8 @@
                 redirectTo("users/logout");
                 exit();
             } 
+
+            checkFingerprint($encUID);
 
             //query all categories
             $categories = $this->videoModel->queryCategories();
@@ -163,26 +164,71 @@
             }
         }
 
-        public function watch($encUID, $videoId=0) {
-            if ($videoId === 0) {
-                redirectTo("users/login");
+        public function watch($encUID="", $videoId=0) {
+
+            //Check the presence of 2 paramters to detect guest user
+            if ( $videoId === 0 && !empty($encUID) ) {
+
+                //swap the value of $encUID to the value of $videoId
+                $videoId = $encUID;
+
+                //Check if there is a current session for a logged-in user
+                if ( isset($_SESSION['uid']) ) {
+                    
+                    //set the $encUID based on the existing user session
+                    $encUID = $_SESSION['uid'];
+
+                    //redirect to the current page with the $encUID and videoId in the parameter
+                    redirectTo('pages/watch/'. $encUID.'/'.$videoId);
+                }
+                else {
+                    //set the current user as guest
+                    $encUID = "guest";
+                }
+                
+                
+            }
+            //If a possible user is detected, validate the $encUID
+            elseif ( !empty($encUID) && !($videoId === 0) ) {
+                // validate the $encUID parameter
+                $decodedUID = $this->userModel->isEncUIDValid($encUID);
+                //check for any special characters in the string
+                $userInvalid = preg_match('/\D+/', $decodedUID);
+                if ( $userInvalid==0 && !checkFingerprint($encUID) ) { //if $encUID is invalid redirect to 404
+                    redirectTo("pages/pagenotfound");
+                    exit();
+                }
+            }
+            else {
+                redirectTo("pages/pagenotfound");
                 exit();
-            } 
-            //Require the Videp Class for CurrentVideo container
+            }
+            
+
+            //Require the Video Class for CurrentVideo container
             require_once "../app/classes/CurrentVideo.php";
+            
+            //Instantiate current video
+            $currentVideo = new CurrentVideo($this->videoModel, $videoId);
+
+            //Check if video with given videoId exists; redirectTo 404 page if not found
+            if ( $currentVideo->getVideoId() === null ) {
+                redirectTo("pages/pagenotfound");
+                exit();
+            }
 
             //Instantiate User to get the Uploader details
-            $currentVideo = new CurrentVideo($this->videoModel, $videoId);
             $currentVideoUploader = new User();
-            //TODO: Decrypt encUID
+            $currentVideoUploader = $currentVideoUploader->getUserById($currentVideo->getVideoUploaderId());
+            $encUploaderUID = getBase64EncodedValue(Constants::$data_key, $currentVideo->getVideoUploaderId());
 
             $data = [
                 'title' => 'Player',
                 'videoId' => $videoId,
                 'currentVideo' => $currentVideo,
-                'currentVideoUploader' => $currentVideoUploader->getUserById($currentVideo->getVideoUploaderId()),
-                // 'loggedInUserId' => 36 //TODO: SET TO AN ENCRYPTED USER ID
-                'loggedInUserId' => $encUID //TODO: SET TO AN ENCRYPTED USER ID
+                'currentVideoUploader' => $currentVideoUploader,
+                'loggedInUserId' => $encUID,
+                'isSubscriber' => $this->userModel->isSubscribedTo($encUploaderUID, $encUID)
             ];
 
             $this->loadView("pages/watch", $data);
@@ -193,8 +239,24 @@
             // $names = array("name"=>"ian", "gender"=>"male", "age"=>"38");
             $videoId = $_POST["videoId"];
             $btnClicked = $_POST["btnClicked"];
-            $encUserId= $_POST["encUserId"];
-            echo json_encode($encUserId);
+            $encUserId = $_POST["encUserId"];
+            $encUploaderUID = $_POST["encUploaderId"];
+
+            //check if current logged-in user is a subscriber of the uploader of the currently playing video
+            $isSubscriber = $this->userModel->isSubscribedTo($encUploaderUID, $encUserId);
+
+            //Toggle Subscribe and Unsubscribe
+            if ( $isSubscriber ) {
+                //Update db
+                $result = $this->userModel->unsubscribeTo($encUploaderUID, $encUserId);
+            }
+            else {
+                //Update db
+                $result = $this->userModel->subscribeTo($encUploaderUID, $encUserId);
+            }
+
+            echo json_encode($result);
+            // echo ($result);
         }
 
         public function ajaxLikeVideo() {
@@ -243,6 +305,14 @@
             $updatedNumOfDisLikes = $this->videoModel->getVideoDislikes($videoId);
             $likeDislikeStat = array("likes"=>$updatedNumOfLikes, "dislikes"=>$updatedNumOfDisLikes, "flag"=>$flag);
             echo (json_encode($likeDislikeStat));
+        }
+
+        public function pagenotfound() {
+            $data = [
+                'title' => '404 Page not Found',
+                'developer' => 'Christian Dimayacyac'
+            ];
+            $this->loadView('pages/404', $data);
         }
 
 

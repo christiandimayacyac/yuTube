@@ -22,10 +22,11 @@
 
         //base64encode security keys
         public static $session_key = "s3c3r3t";
+        public static $data_key = "s3c3r3td@t@";
         public static $cookie_key = "r3m3mb3rM3";
 
         //Cookie time limit for remember me in minutes
-        public static $timeLimit = 2;
+        public static $timeLimit = 30;
 
     }
 

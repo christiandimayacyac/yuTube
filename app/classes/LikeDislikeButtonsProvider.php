@@ -14,15 +14,26 @@
             $this->videoId = $currentVideo->getVideoId();
             // $this->loggedInUserId = $loggedInUserId;
             $this->encUID = $encUID;
-            $this->loggedInUserId = getBase64DecodedValue(Constants::$session_key,$encUID);
+            if ( $encUID !== "guest" ) {
+                $this->loggedInUserId = getBase64DecodedValue(Constants::$session_key,$encUID);
+            }
+            else {
+                $this->loggedInUserId = $encUID;
+            }
+            // $this->loggedInUserId = getBase64DecodedValue(Constants::$session_key,$encUID);
         }
 
         public function create() {
-            //Check if current video is liked by the loggedin user
+            $class = "thumbs-icon";
+            //Check if current video is liked by the logged-in user
             //Set appropriate icon
-            if ( $this->currentVideo->isVideoLiked($this->loggedInUserId) === FALSE ) {
+            if ( $this->encUID == "guest" ) {
+                $thumbsUpIcon = "../../images/icons/thumb-up.png";
+                // $class = "thumbs-icon";
+            }
+            elseif ( $this->currentVideo->isVideoLiked($this->loggedInUserId) === FALSE || !isUserLoggedIn($this->encUID) ) {
                 $thumbsUpIcon = "../../../images/icons/thumb-up.png";
-                $class = "thumbs-icon";
+                // $class = "thumbs-icon";
             }
             else {
                 $thumbsUpIcon = "../../../images/icons/thumb-up-active.png";
@@ -30,9 +41,13 @@
             }
 
             //Set appropriate icon
-            if ( $this->currentVideo->isVideoDisliked($this->loggedInUserId) === FALSE ) {
+            if ( $this->encUID == "guest" ) {
+                $thumbsDownIcon = "../../images/icons/thumb-down.png";
+                // $class = "thumbs-icon";
+            }
+            elseif ( $this->encUID == "guest" || $this->currentVideo->isVideoDisliked($this->loggedInUserId) === FALSE || !isUserLoggedIn($this->encUID) ) {
                 $thumbsDownIcon = "../../../images/icons/thumb-down.png";  
-                $class = "thumbs-icon";
+                // $class = "thumbs-icon";
             }
             else {
                 $thumbsDownIcon = "../../../images/icons/thumb-down-active.png";  
@@ -41,9 +56,18 @@
 
             $likeButton = $this->createLikeButton($thumbsUpIcon, $class);
             $dislikeButton = $this->createDislikeButton($thumbsDownIcon, $class);
-
             $numOfLikes = $this->currentVideo->getVideoLikes($this->videoId);
             $numOfDislikes = $this->currentVideo->getVideoDislikes($this->videoId);
+
+            //Set number of likes to empty string if = to zero
+            if ( $numOfLikes <= 0 ) {
+                $numOfLikes = "";
+            }
+
+            //Set number of dislikes to empty string if = to zero
+            if ( $numOfDislikes <= 0 ) {
+                $numOfDislikes = "";
+            }
             
             return "<span class='thumbs'>
                         $likeButton <span class='likeCount'>$numOfLikes</span>
@@ -52,14 +76,27 @@
         }
 
         public function createLikeButton($thumbsUpIcon, $class) {
-            $action = 'likeVideo('.$this->currentVideo->getVideoId().', "'.$this->encUID.'")';
-            // $action = "likeVideo(".$this->currentVideo->getVideoId().", '".$this->encUID."')";
-            return ButtonProvider::createButton($class, $action, "", $thumbsUpIcon, "Like");
+            if ( $this->encUID === "guest" ) {
+                $action = "";
+                return ButtonProvider::createButton($class, $action, "", $thumbsUpIcon, "Like","disabled");
+            }
+            else {
+                $action = (isUserLoggedIn($this->encUID)) ? "likeVideo({$this->currentVideo->getVideoId()}, \"{$this->encUID}\")" : "";
+                return ButtonProvider::createButton($class, $action, "", $thumbsUpIcon, "Like");
+            }
+            
         }
         
         public function createDislikeButton($thumbsDownIcon, $class) {
-            $action = 'dislikeVideo('.$this->currentVideo->getVideoId().', "'.$this->encUID.'")';
-            return ButtonProvider::createButton($class, $action, "", $thumbsDownIcon, "Dislike");
+            if ( $this->encUID === "guest" ) {
+                $action = "";
+                return ButtonProvider::createButton($class, $action, "", $thumbsDownIcon, "Dislike", "disabled");
+            }
+            else {
+                $action = (isUserLoggedIn($this->encUID)) ? "dislikeVideo({$this->currentVideo->getVideoId()}, \"{$this->encUID}\")" : "";
+                return ButtonProvider::createButton($class, $action, "", $thumbsDownIcon, "Dislike");
+            }
+            
         }
     }
 

@@ -21,20 +21,26 @@
 
         public function __construct($videoModel, $videoId) {
             $this->videoModel = $videoModel;
-            $this->video = $videoModel->getVideoById($videoId);
+            if ( ! $this->video = $videoModel->getVideoById($videoId) ) {
+                $this->video = null;
+                $this->videoId = null;
+            }
+            else {
+                $this->videoId = $this->video->id;
+                $this->videoTitle = $this->video->title;
+                $this->videoDescription = $this->video->description;
+                $this->videoPrivacyType = $this->video->privacy;
+                $this->videoFilePath = $this->video->filePath; 
+                $this->videoCategory = $this->video->category;
+                $this->videoDateUploaded = $this->video->dateUploaded;
+                $this->videoViews = $this->video->views;
+                $this->videoDuration = $this->video->duration;
+                $this->videoUploaderId = $this->video->uploadedBy;
+                $this->videoLikes= $this->video->likes;
+                $this->videoDislikes = $this->video->dislikes;
+            }
             
-            $this->videoId = $this->video->id;
-            $this->videoTitle = $this->video->title;
-            $this->videoDescription = $this->video->description;
-            $this->videoPrivacyType = $this->video->privacy;
-            $this->videoFilePath = $this->video->filePath; 
-            $this->videoCategory = $this->video->category;
-            $this->videoDateUploaded = $this->video->dateUploaded;
-            $this->videoViews = $this->video->views;
-            $this->videoDuration = $this->video->duration;
-            $this->videoUploaderId = $this->video->uploadedBy;
-            $this->videoLikes= $this->video->likes;
-            $this->videoDislikes = $this->video->dislikes;
+            
         }
 
         public function getVideoId() {

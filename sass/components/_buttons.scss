@@ -87,3 +87,19 @@ button.btnShowHide:link,
 button.btnShowHide:focus {
     outline: none;
 }
+
+button.video-subscibe-button {
+    cursor: pointer;
+    color: #6d6d6d;
+    font-size: 1.4rem;
+    height: 4rem;
+    margin-left: auto;
+
+    &.subscribe {
+        background-color: #f00;
+    }
+
+    & span {
+        color: #ffffff;
+    }
+}

@@ -21,9 +21,9 @@
                 //unset $url[0] - Controller Name
                 unset($url[0]);
             }
-            else {
-                die("Invalid Controller!");
-            }
+            // else {
+            //     die("Invalid Controller!");
+            // }
 
             //Require the controller file
             require_once '../app/controllers/' . $this->currentController . '.php';
@@ -43,7 +43,7 @@
 
             //Retrieve the remaining parameters/parts of the URL
             $this->params = $url ? array_values($url) : [];           
-
+            
             //Call a callback method with parameters
             call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
         }

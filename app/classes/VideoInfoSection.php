@@ -7,13 +7,20 @@
         private $loggedInUserId;
         private $currentVideo;
         private $currentVideoUploader;
+        private $isSubscriber;
 
-        public function __construct($encUID, $currentVideo, $currentVideoUploader) {
+        public function __construct($encUID, $currentVideo, $currentVideoUploader, $isSubscriber) { //$isSubscriber returns true if the current logged-in user is a subscriber of the owner the currently playing video
             $this->encUID = $encUID;
-            // $this->loggedInUserId = getBase64DecodedValue(Constants::$session_key,$encUID);
-            $this->loggedInUserId = $encUID;
+            if ( $encUID !== "guest" ) {
+                $this->loggedInUserId = getBase64DecodedValue(Constants::$session_key,$encUID);
+            }
+            else {
+                $this->loggedInUserId = $encUID;
+            }
+            // $this->loggedInUserId = $encUID;
             $this->currentVideo = $currentVideo;
             $this->currentVideoUploader = $currentVideoUploader;
+            $this->isSubscriber = $isSubscriber;
 
             //reuqire ButtonProvider to generate button
             require_once "../app/classes/ButtonProvider.php";
@@ -29,8 +36,8 @@
         public function getPrimaryVideoInfo() {
             require_once "../app/classes/LikeDislikeButtonsProvider.php";
 
-            // $likeDislikeButtons = new LikeDislikeButtonsProvider($this->currentVideo, $this->loggedInUserId);
-            $likeDislikeButtons = new LikeDislikeButtonsProvider($this->currentVideo, $this->loggedInUserId);
+            // $likeDislikeButtons = new LikeDislikeButtonsProvider($this->currentVideo, $this->encUID);
+            $likeDislikeButtons = new LikeDislikeButtonsProvider($this->currentVideo, $this->encUID);
 
 
             return "<div class='video-primary-info'>
@@ -46,28 +53,62 @@
          * Generates the secondary section of the video info
          */
         public function getSecondaryVideoInfo() {
-            $date = new DateTime($this->currentVideo->getVideoDateUploaded());
-            $date = $date->format('F d, Y');
+            //Retrieve and format the date video was uploaded
+            $date = $this->currentVideo->getVideoDateUploaded();
+            $date = date('M d, Y', strtotime($date));
 
-            $button = "SUBSCRIBED";
             $numOfSubscribers = $this->currentVideoUploader->subscribers;
+            //Check if no subscribers; Set to empty if none;
+            if  ( (int)$numOfSubscribers === 0 ) {
+                $numOfSubscribers = "";
+            }
+            
+            $buttonText = "SUBSCRIBE";
+            $disabled = "";  
+            $buttonClass = "video-subscibe-button subscribe";
+            $profilePicPath = '../../../'. $this->currentVideoUploader->profilePicPath;
+            //Check if a user is logged in; Disable button if not logged in
+            // if ( !isUserLoggedIn($this->encUID) || ($this->loggedInUserId !== $this->currentVideoUploader->userId) ) {
+            if ( !isUserLoggedIn($this->encUID) ) {
+                $disabled = " disabled";
+                $profilePicPath = '../../'. $this->currentVideoUploader->profilePicPath;
+                // die("1");
+            }
+            elseif ( $this->loggedInUserId === $this->currentVideoUploader->userId ) {
+                $buttonText = "Edit Video";
+                $buttonClass = "video-subscibe-button";
+                $numOfSubscribers = "";   
+                // $disabled = "";
+                // $profilePicPath = '../../../'. $this->currentVideoUploader->profilePicPath;
+                // die("2");
+            }
+            else {
+                // check if user is already subscibed in the uploader of the currently playing video
+                if( $this->isSubscriber ) {
+                    $buttonText = "SUBSCRIBED";
+                } 
+            }
 
-            // $subscribeAction = "toggleSubscribe(this, {$this->currentVideo->getVideoId()}, {$this->loggedInUserId})";
-            $subscribeAction = "toggleSubscribe(this, {$this->currentVideo->getVideoId()}, {$this->loggedInUserId})";
-            $subscribeButton = ButtonProvider::createButton("video-subscibe-button", $subscribeAction, "$button $numOfSubscribers", null, "Subscribe");
+            $encryptedUploaderID = getBase64EncodedValue(Constants::$data_key, $this->currentVideoUploader->userId);
+            $subscribeAction = "toggleSubscribe(this, {$this->currentVideo->getVideoId()}, \"$this->encUID\", \"$encryptedUploaderID\")";
+            $subscribeButton = ButtonProvider::createButton($buttonClass, $subscribeAction, "$buttonText $numOfSubscribers", null, "Subscribe", $disabled);
+            
+            $profileLink = "../../../users/profile/$encryptedUploaderID";
 
             //TODO: Format number of subscribers if 1K and above
             return "<div class='video-secondary-info'>
                         <div class='video-secondary-avatar'>
-                            <img src='../../../{$this->currentVideoUploader->profilePicPath}' alt='user avatar'>
+                            <a href='$profileLink' class='video-avatar-link'>
+                                <img src='$profilePicPath' alt='user avatar'>
+                            </a>
                         </div>
                         <div class='video-secondary-text'>
-                            <h2 class='video-uploader'>{$this->currentVideoUploader->username}</h2>
+                            <h2 class='video-uploader'><a href='$profileLink'>{$this->currentVideoUploader->username}</a></h2>
                             <p class='video-published'>Published on $date</p>
+                            <p class='video-description'>{$this->currentVideo->getVideoDescription()}</p>
                         </div>
                         $subscribeButton
-                    </div>
-                    ";
+                    </div>";
         }
     }
 

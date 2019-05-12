@@ -15,7 +15,7 @@
     </div>
     <div class="video-header">
         <?php
-            $player = new VideoInfoSection($data['loggedInUserId'], $data['currentVideo'], $data['currentVideoUploader']);
+            $player = new VideoInfoSection($data['loggedInUserId'], $data['currentVideo'], $data['currentVideoUploader'], $data['isSubscriber']);
             echo $player->create();
             
         ?>

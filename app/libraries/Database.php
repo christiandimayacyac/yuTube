@@ -83,6 +83,10 @@
         public function getLastInsertId() {
             return $this->db_handle->lastInsertId();
         }
+
+        public function getError() {
+            return $this->db_error;
+        }
     }
 
 ?>
